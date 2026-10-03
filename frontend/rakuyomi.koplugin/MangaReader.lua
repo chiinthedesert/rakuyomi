@@ -123,11 +123,38 @@ function MangaReader:applyReaderAppearance(ui)
     return
   end
 
-  ui.view.outer_page_color = Blitbuffer.COLOR_BLACK
-  ui.view.page_bgcolor = Blitbuffer.COLOR_BLACK
+  local view = ui.view
 
-  if ui.view.page_gap ~= nil then
-    ui.view.page_gap.color = Blitbuffer.COLOR_BLACK
+  function view:drawPageSurround(bb, x, y)
+    if self.dimen.h > self.visible_area.h then
+      bb:paintRect(x, y, self.dimen.w, self.state.offset.y, Blitbuffer.COLOR_BLACK)
+      local bottom_margin = y + self.visible_area.h + self.state.offset.y
+      bb:paintRect(
+        x,
+        bottom_margin,
+        self.dimen.w,
+        self.state.offset.y + self.footer:getHeight(),
+        Blitbuffer.COLOR_BLACK
+      )
+    end
+    if self.dimen.w > self.visible_area.w then
+      bb:paintRect(x, y, self.state.offset.x, self.dimen.h, Blitbuffer.COLOR_BLACK)
+      bb:paintRect(
+        x + self.dimen.w - self.state.offset.x - 1,
+        y,
+        self.state.offset.x + 1,
+        self.dimen.h,
+        Blitbuffer.COLOR_BLACK
+      )
+    end
+  end
+
+  function view:drawPageBackground(bb, x, y)
+    bb:paintRect(x, y, self.dimen.w, self.dimen.h, Blitbuffer.COLOR_BLACK)
+  end
+
+  function view:drawPageGap(bb, x, y)
+    bb:paintRect(x, y, self.dimen.w, self.page_gap.height, Blitbuffer.COLOR_BLACK)
   end
 end
 
