@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/chiinthedesert/rakuyomi/compare/v1.0.0...v1.0.1) (2026-10-03)
+
+
+### Bug Fixes
+
+* satisfy luacheck in manga reader appearance ([dfdb1a1](https://github.com/chiinthedesert/rakuyomi/commit/dfdb1a12ddbcf6b193ef51679c74e677a7c2bc64))
+
 # 1.0.0 (2026-10-03)
 
 
