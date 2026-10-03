@@ -115,7 +115,6 @@ function MangaReader:initializeFromReaderUI(ui)
   end
 end
 
---- @private
 --- Applies Rakuyomi-specific reader appearance settings.
 --- @private
 --- @param ui unknown The currently active `ReaderUI` instance.
@@ -132,6 +131,7 @@ function MangaReader:applyReaderAppearance(ui)
   end
 end
 
+--- @private
 --- @param ui unknown The currently active `ReaderUI` instance.
 function MangaReader:hookWithPriorityOntoReaderUiEvents(ui)
   -- We need to reorder the `ReaderUI` children such that we are the first children,
