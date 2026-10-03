@@ -1,4 +1,5 @@
 local ReaderUI = require("apps/reader/readerui")
+local Blitbuffer = require("ffi/blitbuffer")
 local ReadHistory = require("readhistory")
 local UIManager = require("ui/uimanager")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
@@ -104,6 +105,7 @@ end
 --- @param ui unknown The `ReaderUI` instance we're being called from.
 function MangaReader:initializeFromReaderUI(ui)
   if self.is_showing then
+    self:applyReaderAppearance(ui)
     ui.menu:registerToMainMenu(MangaReader)
     self:overrideBtnFileManager(ui.menu)
 
@@ -114,6 +116,22 @@ function MangaReader:initializeFromReaderUI(ui)
 end
 
 --- @private
+--- Applies Rakuyomi-specific reader appearance settings.
+--- @private
+--- @param ui unknown The currently active `ReaderUI` instance.
+function MangaReader:applyReaderAppearance(ui)
+  if not G_reader_settings:isTrue("rakuyomi_black_reader_background") then
+    return
+  end
+
+  ui.view.outer_page_color = Blitbuffer.COLOR_BLACK
+  ui.view.page_bgcolor = Blitbuffer.COLOR_BLACK
+
+  if ui.view.page_gap ~= nil then
+    ui.view.page_gap.color = Blitbuffer.COLOR_BLACK
+  end
+end
+
 --- @param ui unknown The currently active `ReaderUI` instance.
 function MangaReader:hookWithPriorityOntoReaderUiEvents(ui)
   -- We need to reorder the `ReaderUI` children such that we are the first children,
