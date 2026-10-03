@@ -125,36 +125,36 @@ function MangaReader:applyReaderAppearance(ui)
 
   local view = ui.view
 
-  function view:drawPageSurround(bb, x, y)
-    if self.dimen.h > self.visible_area.h then
-      bb:paintRect(x, y, self.dimen.w, self.state.offset.y, Blitbuffer.COLOR_BLACK)
-      local bottom_margin = y + self.visible_area.h + self.state.offset.y
+  view.drawPageSurround = function(reader_view, bb, x, y)
+    if reader_view.dimen.h > reader_view.visible_area.h then
+      bb:paintRect(x, y, reader_view.dimen.w, reader_view.state.offset.y, Blitbuffer.COLOR_BLACK)
+      local bottom_margin = y + reader_view.visible_area.h + reader_view.state.offset.y
       bb:paintRect(
         x,
         bottom_margin,
-        self.dimen.w,
-        self.state.offset.y + self.footer:getHeight(),
+        reader_view.dimen.w,
+        reader_view.state.offset.y + reader_view.footer:getHeight(),
         Blitbuffer.COLOR_BLACK
       )
     end
-    if self.dimen.w > self.visible_area.w then
-      bb:paintRect(x, y, self.state.offset.x, self.dimen.h, Blitbuffer.COLOR_BLACK)
+    if reader_view.dimen.w > reader_view.visible_area.w then
+      bb:paintRect(x, y, reader_view.state.offset.x, reader_view.dimen.h, Blitbuffer.COLOR_BLACK)
       bb:paintRect(
-        x + self.dimen.w - self.state.offset.x - 1,
+        x + reader_view.dimen.w - reader_view.state.offset.x - 1,
         y,
-        self.state.offset.x + 1,
-        self.dimen.h,
+        reader_view.state.offset.x + 1,
+        reader_view.dimen.h,
         Blitbuffer.COLOR_BLACK
       )
     end
   end
 
-  function view:drawPageBackground(bb, x, y)
-    bb:paintRect(x, y, self.dimen.w, self.dimen.h, Blitbuffer.COLOR_BLACK)
+  view.drawPageBackground = function(reader_view, bb, x, y)
+    bb:paintRect(x, y, reader_view.dimen.w, reader_view.dimen.h, Blitbuffer.COLOR_BLACK)
   end
 
-  function view:drawPageGap(bb, x, y)
-    bb:paintRect(x, y, self.dimen.w, self.page_gap.height, Blitbuffer.COLOR_BLACK)
+  view.drawPageGap = function(reader_view, bb, x, y)
+    bb:paintRect(x, y, reader_view.dimen.w, reader_view.page_gap.height, Blitbuffer.COLOR_BLACK)
   end
 end
 
