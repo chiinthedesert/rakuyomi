@@ -1,4 +1,5 @@
 local ReaderUI = require("apps/reader/readerui")
+local Blitbuffer = require("ffi/blitbuffer")
 local ReadHistory = require("readhistory")
 local UIManager = require("ui/uimanager")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
@@ -104,12 +105,56 @@ end
 --- @param ui unknown The `ReaderUI` instance we're being called from.
 function MangaReader:initializeFromReaderUI(ui)
   if self.is_showing then
+    self:applyReaderAppearance(ui)
     ui.menu:registerToMainMenu(MangaReader)
     self:overrideBtnFileManager(ui.menu)
 
     ui:registerPostInitCallback(function()
       self:hookWithPriorityOntoReaderUiEvents(ui)
     end)
+  end
+end
+
+--- Applies Rakuyomi-specific reader appearance settings.
+--- @private
+--- @param ui unknown The currently active `ReaderUI` instance.
+function MangaReader:applyReaderAppearance(ui)
+  if not G_reader_settings:isTrue("rakuyomi_black_reader_background") then
+    return
+  end
+
+  local view = ui.view
+
+  function view:drawPageSurround(bb, x, y)
+    if self.dimen.h > self.visible_area.h then
+      bb:paintRect(x, y, self.dimen.w, self.state.offset.y, Blitbuffer.COLOR_BLACK)
+      local bottom_margin = y + self.visible_area.h + self.state.offset.y
+      bb:paintRect(
+        x,
+        bottom_margin,
+        self.dimen.w,
+        self.state.offset.y + self.footer:getHeight(),
+        Blitbuffer.COLOR_BLACK
+      )
+    end
+    if self.dimen.w > self.visible_area.w then
+      bb:paintRect(x, y, self.state.offset.x, self.dimen.h, Blitbuffer.COLOR_BLACK)
+      bb:paintRect(
+        x + self.dimen.w - self.state.offset.x - 1,
+        y,
+        self.state.offset.x + 1,
+        self.dimen.h,
+        Blitbuffer.COLOR_BLACK
+      )
+    end
+  end
+
+  function view:drawPageBackground(bb, x, y)
+    bb:paintRect(x, y, self.dimen.w, self.dimen.h, Blitbuffer.COLOR_BLACK)
+  end
+
+  function view:drawPageGap(bb, x, y)
+    bb:paintRect(x, y, self.dimen.w, self.page_gap.height, Blitbuffer.COLOR_BLACK)
   end
 end
 
